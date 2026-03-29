@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+yfinance
+pandas
+numpy
+ta
+langchain-groq
+python-dotenv
+websockets
+langchain
+langgraph

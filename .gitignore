@@ -1,0 +1,23 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/.env
+backend/*.pyc
+
+# Shared/Common
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+logs/
+*.log
