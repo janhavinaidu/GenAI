@@ -16,6 +16,35 @@ PatternIQ is an advanced multi-agent AI system designed to democratize professio
 
 PatternIQ operates on a modular, multi-agent architecture where specialized AI agents collaborate to deliver a comprehensive stock analysis.
 
+### 🏗️ Visual Architecture
+```mermaid
+graph TD
+    User((User / Retail Investor)) -->|Interacts| Frontend[React Frontend]
+    
+    subgraph "Backend (FastAPI)"
+        Frontend -->|API Request| main[main.py / FastAPI]
+        main -->|Trigger| Orchestrator[Orchestrator Agent]
+        
+        subgraph "Multi-Agent System"
+            Orchestrator -->|1. Scan| Scanner[Scanner Agent]
+            Orchestrator -->|2. Backtest| Backtester[Backtester Agent]
+            Orchestrator -->|3. Explain| Explainer[Explainer Agent]
+        end
+        
+        Scanner -->|Fetch Data| YFinance[(yfinance / NSE)]
+        Scanner -->|Detect| PatternLogic[Pattern Detector Util]
+        
+        Backtester -->|Verify Signals| BacktesterUtil[Backtester Util]
+        
+        Explainer -->|Analyze| LLM[Groq Llama 3.3 70B]
+    end
+    
+    Alerter[Alerter Agent] -->|Background Scan| Scanner
+    
+    main -.->|WebSocket Logs| Frontend
+    main -->|Analysis Result| Frontend
+```
+
 ### 1. 🎤 The Orchestrator
 The central brain of the system. It receives a stock ticker (e.g., RELIANCE, TCS) and coordinates the entire pipeline. It manages the sequence of operations and ensures that data flows seamlessly between agents.
 
