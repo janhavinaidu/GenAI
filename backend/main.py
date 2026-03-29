@@ -2,6 +2,8 @@ from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from agents.orchestrator import analyze_stock, get_market_alerts
+from agents.market_gpt import chat_with_market_gpt
+from agents.video_engine import generate_market_wrap
 from pydantic import BaseModel
 import asyncio
 import numpy as np
@@ -37,6 +39,16 @@ app.add_middleware(
 
 class StockRequest(BaseModel):
     ticker: str
+    timeframe: str = "1M"
+
+class ChatRequest(BaseModel):
+    ticker: str
+    message: str
+    history: list
+    context: dict
+
+class WrapRequest(BaseModel):
+    data: dict
 
 @app.get("/")
 def root():
@@ -44,7 +56,7 @@ def root():
 
 @app.post("/api/analyze")
 def analyze(request: StockRequest):
-    result = analyze_stock(request.ticker)
+    result = analyze_stock(request.ticker, request.timeframe)
     return JSONResponse(content=json.loads(json.dumps(result, cls=NumpyEncoder)))
 
 @app.get("/api/alerts")
@@ -55,6 +67,21 @@ def alerts():
 @app.get("/api/health")
 def health():
     return {"status": "healthy"}
+
+@app.post("/api/chat")
+def chat(request: ChatRequest):
+    response = chat_with_market_gpt(
+        request.ticker,
+        request.message,
+        request.history,
+        request.context
+    )
+    return {"response": response}
+
+@app.post("/api/market-wrap")
+def market_wrap(request: WrapRequest):
+    result = generate_market_wrap(request.data)
+    return JSONResponse(content=result)
 
 @app.websocket("/ws/analyze/{ticker}")
 async def websocket_analyze(websocket: WebSocket, ticker: str):

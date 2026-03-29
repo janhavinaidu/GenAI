@@ -6,7 +6,7 @@ import time
 
 load_dotenv()
 
-def run_explainer(ticker: str, patterns: list, backtest_results: list, stock_info: dict) -> dict:
+def run_explainer(ticker: str, patterns: list, backtest_results: list, stock_info: dict, intel_signals: list = []) -> dict:
     logs = []
 
     def log(msg):
@@ -20,7 +20,8 @@ def run_explainer(ticker: str, patterns: list, backtest_results: list, stock_inf
         llm = ChatGroq(
             api_key=os.getenv("GROQ_API_KEY"),
             model_name="llama-3.3-70b-versatile",
-            temperature=0.3
+            temperature=0.3,
+            max_tokens=600,
         )
 
         pattern_summary = "\n".join([
@@ -28,20 +29,29 @@ def run_explainer(ticker: str, patterns: list, backtest_results: list, stock_inf
             for r in backtest_results
         ])
 
+        intel_summary = "\n".join([
+            f"- [{s['label']}] {s['description']} (Source: {s['source']})"
+            for s in intel_signals
+        ])
+
         log("Generating plain-English explanation for retail investor...")
 
         messages = [
             SystemMessage(content="""You are an expert Indian stock market analyst. 
-            Explain chart patterns to retail investors in simple, actionable language.
-            Keep it under 100 words. Be direct. Mention specific numbers.
+            Explain chart patterns and corporate intelligence signals to retail investors in simple, actionable language.
+            Synthesize both technical patterns and fundamental 'Opportunity Radar' signals.
+            Keep it under 120 words. Be direct. Mention specific numbers.
             End with one clear action: Buy / Sell / Wait and Watch."""),
             HumanMessage(content=f"""
             Stock: {ticker} ({stock_info.get('name', ticker)})
             Current Price: ₹{stock_info.get('current_price', 'N/A')}
             Change: {stock_info.get('change_percent', 0)}%
             
-            Detected Patterns:
+            Detected Technical Patterns:
             {pattern_summary}
+            
+            Opportunity Radar (Corporate Intelligence):
+            {intel_summary if intel_summary else 'No major news/filings detected.'}
             
             Explain what this means for a retail investor and what action to take.
             """)

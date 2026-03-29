@@ -8,7 +8,8 @@ export default function AlertFeed({ alerts }) {
     }
 
     return (
-        <table className="alert-table">
+        <div style={{ overflowX: "auto", width: "100%", paddingBottom: "10px" }}>
+            <table className="alert-table">
             <thead>
                 <tr>
                     <th>Stock</th>
@@ -20,20 +21,21 @@ export default function AlertFeed({ alerts }) {
             <tbody>
                 {alerts.map((a, i) => (
                     <tr key={i}>
-                        <td style={{ color: "#fff", fontWeight: 600 }}>
-                            {a.ticker}
-                            <div style={{ fontSize: "10px", color: a.change_pct >= 0 ? "#10B981" : "#EF4444" }}>
+                        <td>
+                            <div style={{ fontWeight: 700, color: "#fff" }}>{a.ticker}</div>
+                            <div style={{ fontSize: "0.7rem", color: a.change_pct >= 0 ? "var(--buy)" : "var(--sell)" }}>
                                 ₹{a.price} ({a.change_pct >= 0 ? "+" : ""}{a.change_pct}%)
                             </div>
                         </td>
-                        <td style={{ fontSize: "11px" }}>{a.pattern}</td>
+                        <td style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{a.pattern}</td>
                         <td>
                             <span className={`badge badge-${a.type}`}>{a.type}</span>
                         </td>
-                        <td style={{ fontSize: "11px" }}>{a.time}</td>
+                        <td style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{a.time}</td>
                     </tr>
                 ))}
             </tbody>
         </table>
+        </div>
     );
 }

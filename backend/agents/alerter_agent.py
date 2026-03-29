@@ -20,7 +20,10 @@ def run_alerter(limit: int = 10) -> dict:
             df = get_stock_data(ticker, period="3mo", interval="1d")
             patterns = detect_patterns(df)
 
-            strong = [p for p in patterns if p['strength'] == 'high' and p['type'] != 'neutral']
+            # Include high and medium-strength non-neutral patterns
+            strong = [p for p in patterns if p['strength'] in ('high', 'medium') and p['type'] != 'neutral']
+            if not strong:
+                strong = [p for p in patterns if p['type'] != 'neutral']
             if strong:
                 current_price = round(float(df['close'].iloc[-1]), 2)
                 prev_price = round(float(df['close'].iloc[-2]), 2)

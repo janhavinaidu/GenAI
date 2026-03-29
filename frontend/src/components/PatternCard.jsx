@@ -11,8 +11,7 @@ export default function PatternCard({ result }) {
                 </span>
             </div>
             <div className="success-rate">
-                Historical Success Rate: <strong style={{ color: barColor }}>{rate}%</strong>
-                {" "}({result.successful_signals}/{result.total_signals} signals)
+                Detection Reliability: <strong>{rate}%</strong>
             </div>
             <div className="progress-bar">
                 <div
@@ -21,12 +20,12 @@ export default function PatternCard({ result }) {
                 />
             </div>
             {result.description && (
-                <div style={{ fontSize: "11px", color: "#64748B", marginTop: "6px" }}>
+                <div className="explanation-text" style={{ fontSize: "0.75rem", marginTop: "10px" }}>
                     {result.description}
                 </div>
             )}
-            <div style={{ fontSize: "11px", color: "#2D2D3D", marginTop: "4px" }}>
-                Avg return: {result.avg_return > 0 ? "+" : ""}{result.avg_return}%
+            <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "8px" }}>
+                Signal Count: {result.successful_signals}/{result.total_signals} · Avg Return: {result.avg_return}%
             </div>
         </div>
     );
