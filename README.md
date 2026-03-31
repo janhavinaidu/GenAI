@@ -1,135 +1,156 @@
-# ⚡ PatternIQ: AI Chart Intelligence
+# PatternIQ ⚡
 
-### *Empowering Indian Investors with Multi-Agent Technical Analysis*
+> **The Intelligence Layer for India's 14 Crore Retail Investors.**
+> *A multi-agent AI platform built to transform raw market data into actionable, institutional-grade intelligence.*
 
-![PatternIQ Banner](https://img.shields.io/badge/ET_Gen_AI_Hackathon-2025-blueviolet?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![LLM](https://img.shields.io/badge/LLM-Llama_3.3_70B-orange?style=for-the-badge)
-
-PatternIQ is an advanced multi-agent AI system designed to democratize professional-grade technical analysis for retail investors in the Indian stock market (NSE). By combining traditional technical indicators with cutting-edge Large Language Models, PatternIQ doesn't just find patterns—it explains them in plain English.
+![PatternIQ Banner](https://img.shields.io/badge/ET_Gen_AI_Hackathon-2025-020617?style=for-the-badge&logo=react&logoColor=38bdf8)
 
 ---
 
-## 🧠 Core Architecture: The Multi-Agent System
+## 🎯 The Problem
 
-PatternIQ operates on a modular, multi-agent architecture where specialized AI agents collaborate to deliver a comprehensive stock analysis.
+India has over **14 crore retail demat accounts**, yet the vast majority of investors are flying blind:
+- Reacting to WhatsApp tips instead of data.
+- Missing critical corporate filings and insider activity.
+- Unable to read complex technical charts or understand indicators.
+- Managing portfolios on gut feel, not intelligence.
 
-### 🏗️ Visual Architecture
+**ET Markets has the data. PatternIQ builds the intelligence layer.**
+
+---
+
+## 🤖 What is PatternIQ?
+
+PatternIQ is a **Conversational & Generative AI investment platform** powered by a parallel multi-agent architecture. When you search for an NSE stock, PatternIQ deploys specialized AI agents to analyze the ticker from every quantitative and qualitative angle, delivering the results in plain, actionable English.
+
+### ✨ Core Features & Recent Upgrades
+
+1. **Multi-Agent Intelligence Pipeline**: Connects real-time NSE data, 14 technical indicators, and simulated corporate signals (insider buying, bulk deals) into a single cohesive analysis.
+2. **Dynamic Timeframe Switching**: Analyze stock charts across 5 interactive timeframes (**1D, 1W, 1M, 3M, 1Y**) seamlessly, adjusting indicators dynamically based on the selected period.
+3. **Interactive Market GPT**: A portfolio-aware conversational AI. Ask it for precise entry points or stop-loss strategies. *Upgraded with quick-tap suggestion chips* so users never face a blank input.
+4. **V-IQ Cinematic Video Engine**: Click one button to generate a broadcast-quality, 30-second video reel. An AI Voice Synthesizer reads a custom-written Market Wrap script compiled from the live data.
+5. **NSE Opportunity Scan (Alerter Agent)**: A live scanner monitoring top NSE blue-chip stocks in the background to surface actionable medium/high-strength pattern breakouts.
+6. **Real-Time Backtesting**: Every detected pattern is dynamically backtested against 2 years of historical data to show you its actual historical success rate.
+7. **Premium, Responsive UI**: A fully styled, responsive "Deep Space" glassmorphism interface across all dashboard components for a competition-ready user experience.
+
+---
+
+## 🏗️ The Multi-Agent Architecture
+
+PatternIQ relies on a highly modular framework orchestrated via **FastAPI** and powered by **Groq**.
+
 ```mermaid
 graph TD
-    User((User / Retail Investor)) -->|Interacts| Frontend[React Frontend]
+    User([Retail Investor Input]) --> ORCH[Orchestrator Agent]
     
-    subgraph "Backend (FastAPI)"
-        Frontend -->|API Request| main[main.py / FastAPI]
-        main -->|Trigger| Orchestrator[Orchestrator Agent]
+    subgraph Parallel Multi-Agent Pipeline
+        ORCH -->|1. Price & Tech Analysis| SCAN[Scanner Agent]
+        ORCH -->|2. Win-Rate Testing| BACK[Backtester Agent]
+        ORCH -->|3. Corporate Intel| INTEL[Intelligence Agent]
         
-        subgraph "Multi-Agent System"
-            Orchestrator -->|1. Scan| Scanner[Scanner Agent]
-            Orchestrator -->|2. Backtest| Backtester[Backtester Agent]
-            Orchestrator -->|3. Explain| Explainer[Explainer Agent]
-        end
-        
-        Scanner -->|Fetch Data| YFinance[(yfinance / NSE)]
-        Scanner -->|Detect| PatternLogic[Pattern Detector Util]
-        
-        Backtester -->|Verify Signals| BacktesterUtil[Backtester Util]
-        
-        Explainer -->|Analyze| LLM[Groq Llama 3.3 70B]
+        SCAN -.->|Tech Patterns, S/R Levels| EXP
+        BACK -.->|Historical Success %| EXP
+        INTEL -.->|Insider Trades, Deals| EXP
     end
     
-    Alerter[Alerter Agent] -->|Background Scan| Scanner
+    EXP[Explainer Agent] -->|Synthesizes Context| LLM{Groq LLM: Llama 3.3 70B}
     
-    main -.->|WebSocket Logs| Frontend
-    main -->|Analysis Result| Frontend
+    LLM --> V[🎬 V-IQ Video Engine]
+    LLM --> M[💬 Market GPT Chat]
+    LLM --> D[📊 Dashboard Synthesis]
 ```
 
-### 1. 🎤 The Orchestrator
-The central brain of the system. It receives a stock ticker (e.g., RELIANCE, TCS) and coordinates the entire pipeline. It manages the sequence of operations and ensures that data flows seamlessly between agents.
+### 1. Scanner Agent
+Fetches real-time NSE price data via `yfinance`. Runs 14 technical indicator checks (MACD, RSI, Bollinger Bands, EMA Crossovers). Supports multiple timeframes (1D, 1W, 1M, 3M, 1Y) and automatically calculates support/resistance.
 
-### 2. 🔍 Scanner Agent
-This agent is the "eyes" of the system.
-- **Data Retrieval**: Fetches 6 months of historical daily candle data from NSE using `yfinance`.
-- **Pattern Detection**: Identifies technical setups including **MACD Crossovers**, **RSI Oversold/Overbought levels**, **Golden/Death Crosses**, **Bollinger Band Squeezes**, and **200 EMA Breakouts**.
-- **S/R Identification**: Calculates dynamic Support and Resistance levels.
+### 2. Backtester Agent
+Tests every detected pattern against years of historical NSE data to compute real success rates: *"Bullish MACD Crossover worked 68% of the time on RELIANCE over 24 signals."*
 
-### 3. 🧪 Backtester Agent
-The "validator" that prevents blind following of signals.
-- **Historical Analysis**: For every pattern detected today, this agent looks back at 2 years of historical data for that specific stock.
-- **Performance metrics**: It calculates the **Success Rate** (percentage of times the pattern led to a profit within a 5-day window) and **Average Return**.
+### 3. Intelligence Agent (Opportunity Radar)
+Scans for corporate intelligence signals: Bulk/Block deals on NSE, Director insider buying, SEBI clearances, and FII holding changes. Ranks signals by relevance (`critical`, `high`, `medium`).
 
-### 4. 💡 Explainer Agent (AI-Powered)
-The "voice" that simplifies complexity.
-- **Natural Language Insights**: Uses **LangChain** and **Groq (Llama 3.3 70B)** to translate technical jargon into human-readable advice.
-- **Recommendation**: Synthesizes pattern strength and backtest results into a clear action: **Buy**, **Sell**, or **Wait and Watch**.
+### 4. Explainer Agent
+Synthesizes all technical algorithms and corporate signals into a single readability-optimized paragraph. Provides a clear action (Buy/Sell/Wait) forming the core context layer for the interactive chatbot.
 
-### 5. 🚨 Alerter Agent
-The "watchtower" for the Indian market.
-- **Market-wide Scanning**: Scans the top 50+ NSE stocks in the background.
-- **Signal Aggregation**: Highlights only the "High Strength" bullish or bearish signals across the entire market in a live feed.
+### 5. Alerter Agent
+Handles the NSE Opportunity Scan by autonomously processing a watchlist of top blue-chips, alerting on emerging technical and corporate developments in the background.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-### Backend
-- **Framework**: FastAPI
-- **AI/LLM**: Groq (Llama 3.3 70B Model), LangChain
-- **Data Engineering**: yfinance, Pandas, NumPy
-- **Technical Analysis**: `ta` (Technical Analysis Library)
+| Layer | Technology |
+|:---|:---|
+| **Frontend** | React + Vite, Recharts, Lucide Icons |
+| **Backend** | Python, FastAPI, WebSocket Support |
+| **AI / LLM** | Groq API (`llama-3.3-70b-versatile`) |
+| **LLM Framework**| LangChain (`ChatGroq`) |
+| **Market Data** | `yfinance` (Real-time & Historical NSE Data) |
+| **Tech Analysis**| TA-Lib (`ta`), Pandas, NumPy (14 indicators) |
+| **Styling** | Vanilla CSS (Deep Space Glassmorphism, Neon Accents) |
+| **Audio Output** | Web Speech API (`SpeechSynthesisUtterance`) |
 
-### Frontend
-- **Framework**: React 19 + Vite
-- **Visuals**: Recharts (Custom Candlestick Implementation)
-- **Icons**: Lucide-react
-- **Real-time**: WebSockets for streaming agent logs
+---
+
+## 🎨 Design Philosophy
+
+PatternIQ uses a **"Deep Space" premium design** system:
+- **Dark glassmorphism** cards with frosted glass effects.
+- **Neon accent palette**: Electric Blue (`#38bdf8`), Electric Indigo (`#818cf8`).
+- **Agent Intelligence Trail**: Real-time terminal log of every AI agent's activity.
+- Fully responsive styling ensuring seamless mobile and desktop experiences.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.9+
-- Node.js 18+
-- Groq API Key (Get it at [console.groq.com](https://console.groq.com/))
+- Node.js (v18+)
+- Python (3.10+)
+- A free API key from [Groq](https://console.groq.com/).
 
-### Initial Setup
+### Backend Setup
+```bash
+# Navigate to the backend directory
+cd backend
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/janhavinaidu/GenAI.git
-   cd chart-pattern-intelligence
-   ```
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 
-2. **Backend Setup**:
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-   Create a `.env` file in the `backend` folder:
-   ```env
-   GROQ_API_KEY=your_key_here
-   ```
-   Run the server:
-   ```bash
-   uvicorn main:app --reload
-   ```
+# Install dependencies
+pip install -r requirements.txt
 
-3. **Frontend Setup**:
-   ```bash
-   cd ../frontend
-   npm install
-   npm run dev
-   ```
+# Create a .env file and add your Groq API Key
+echo GROQ_API_KEY="gsk_your_api_key_here" > .env
 
----
+# Run the FastAPI server
+uvicorn main:app --reload --port 8000
+```
 
-## 🏆 Hackathon Acknowledgement
-Built with ❤️ for the **ET Gen AI Hackathon 2025**. PatternIQ aims to bridge the gap between complex algorithmic trading and the everyday Indian retail investor.
+### Frontend Setup
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+Visit `http://localhost:5173` to interact with PatternIQ!
 
 ---
 
-**Disclaimer**: *PatternIQ is an educational tool. Stock market investments are subject to market risks. Always consult with a certified financial advisor before making any investment decisions.*
+## 🔮 Roadmap / Scaling to Production
+
+PatternIQ is built to easily snap into enterprise data lakes:
+- **Corporate Filings:** Replace local simulations with direct NSE Announcements API / SEBI RSS Feeds.
+- **Bulk/Block Deals:** Digest the daily NSE Bulk Deal CSV.
+- **Management Commentary:** Ingest live earnings call transcripts (e.g., via Screener or TickerTape integrations).
+
+---
+
+*Built with precision for the ET Gen AI Hackathon.*
